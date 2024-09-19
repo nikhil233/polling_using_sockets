@@ -9,6 +9,8 @@ import Col from 'react-bootstrap/Col';
 import Stack from 'react-bootstrap/Stack';
 import { Button } from 'react-bootstrap'
 import 'bootstrap/dist/css/bootstrap.min.css';
+import Submitted from './components/submitted'
+import Student from './components/Student'
 
 
 
@@ -18,8 +20,13 @@ function App() {
   const [isStudent, setStudent] = useState(sessionStorage.getItem('isStudent') || 0)
   const [studentName, setStudentName] = useState('') ;
   const [studentID, setStudentID] = useState(sessionStorage.getItem('student_id') || null)
+  const [showSubmitted , setShowSubmitted] = useState(false)
 
-  const submitStudent = () => {
+  const submitStudent = (questionsData) => {
+    if(studentName === ''){
+      alert('Please enter your name');
+      return
+    } 
     let student_id = `${studentName.replace(' ','_')}_${Date.now()}`
     sessionStorage.setItem('studentName', studentName)
     sessionStorage.setItem('isStudent', 1)
@@ -29,6 +36,12 @@ function App() {
     setStudent(1)
   }
 
+  const teacherQuestionSubmitted = () => {
+    
+  }
+  if(showSubmitted){
+    return (<Submitted />)
+  }
   return (
     <>
       <Container style={{ marginTop: '10px',textAlign: 'center' }}>
@@ -47,14 +60,17 @@ function App() {
               </Col>
               <Col sm={12}>
                 <div>Are you a Teacher?
-                  <Button variant="link" onClick={() => setTeacher(1)}>Yes</Button>
+                  <Button variant="link" onClick={() => {
+                    sessionStorage.setItem('isTeacher', 1)
+                    setTeacher(1)
+                    }}>Yes</Button>
                 </div>
               </Col>
             </Row>
           </> : 
           <>
           {
-            isTeacher ? <Teacher /> : <div>Student ID : {studentID}</div>
+            Number(isTeacher) ? <Teacher setShowSubmitted={setShowSubmitted}/> : <Student setShowSubmitted={setShowSubmitted}/>
           }
           </>
           
@@ -63,6 +79,8 @@ function App() {
       </Container>
     </>
   )
+
+  
 }
 
 export default App

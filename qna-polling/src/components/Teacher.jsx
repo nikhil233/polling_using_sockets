@@ -5,7 +5,7 @@ import { io } from "socket.io-client";
 
 
 
-const Teacher = () => {
+const Teacher = ({setShowSubmitted}) => {
 
     const [teacherName,setTeacherName] = useState('')
     const [question,setQuestion] = useState('')
@@ -19,7 +19,7 @@ const Teacher = () => {
             question : question,
             options:options,
             answer:answer,
-            allowed_time:allowedTime
+            allowed_time:allowedTime * 60
         }
         const url = "http://localhost:8000/addquestion"
         // console.log(data)
@@ -31,32 +31,12 @@ const Teacher = () => {
                 },
                 body: JSON.stringify(jsonData),
               });
+              setShowSubmitted(true)
+
         }catch(err){
             console.log("err",err)
         }
-       
     }
-    // useEffect(() => {
-    //     let socket;
-    //     socket = io("http://localhost:8000/teacher",{
-    //       transports: ["websocket"],
-    //       retries:3,
-    //       reconnectionAttempts: 3, // Set the maximum number of reconnection attempts
-    //       reconnectionDelay:5000 //5 secs 
-    //     });
-
-    //     socket.on("connected", () => {
-    //         console.log("connected");
-    //         socket.on("newAnswer", (data) => {
-    //             console.log("newAnswer",data)
-    //         });
-    //     });
-    //     return () => {
-    //         if (socket) {
-    //           socket.disconnect();
-    //         }
-    //       };
-    // },[] );   
     const updateAnswer = (e , key) => {
         if(e){
             setAnswer((prev) => {

@@ -45,13 +45,14 @@ app.post("/addquestion", (req, res) => {
         // let answer = req.body.answer;
         // let teacher_id = req.body.teacher_id;
         const { question, options, answer, teacher_id,allowed_time } = req.body;
-
+        const end_time  = Math.ceil(Date.now()/1000) + ((allowed_time ?? 60));
         let newQuestion = new db.questions({
             question,
             options,
             answer,
             teacher_id,
-            allowed_time
+            allowed_time,
+            end_time
         });
         newQuestion.save();
         io.emit('newQuestion', {...req.body,question_id:newQuestion._id});
@@ -66,7 +67,7 @@ app.post("/addquestion", (req, res) => {
 app.post("/submitanswer", (req, res) => {
     try{
         const { user_id,name,answer,question_id } = req.body;
-        let test = io.of('/teacher').emit('newAnswer',{answer,question_id});
+        let test = io.of('/getanswers').emit('newAnswer',{answer,question_id});
         let newQuestion = new db.pollanswers({
             user_id,name,answer,question_id
         });
@@ -77,6 +78,80 @@ app.post("/submitanswer", (req, res) => {
         console.log(err);
     }
 })
+
+app.get("/getactivequestion", async (req, res) => {
+    try{  
+        const nowTime =  Math.floor(Date.now()/1000);
+        const agg = [
+          {
+            '$match': {
+              'end_time': {
+                '$lt': nowTime
+              }
+            }
+          }, {
+            '$project': {
+              'question': 1, 
+              'options': 1, 
+              'end_time': 1, 
+              '_id': 1
+            }
+          }, {
+            '$sort': {
+              'createdAt': -1
+            }
+          }, {
+            '$limit': 1
+          }
+        ];
+        let cursor =  db.questions.aggregate(agg)
+        let data = await cursor.exec();
+        res.status(200).json({ code:200,message: 'Question fetched successfully!',question_data:(data.length > 0 ? data[0] : null)});
+    }catch(err){
+        res.status(400).json({ message: 'Something went wrong!'});
+        console.log(err);
+    }
+})
+
+app.get('/getanswers', async (req, res) => {
+    try{ 
+        let question_id = req.query.question_id;
+        let user_id = req.query.user_id;
+        const agg = [
+          {
+            '$match': {
+              'question_id': question_id
+            }
+          }, {
+            '$group': {
+              '_id': '$answer', 
+              'submitted': {
+                '$sum': 1
+              }, 
+              'is_your_submisstions': {
+                '$first': {
+                  '$cond': {
+                    'if': {
+                      '$eq': [
+                        '$user_id', user_id
+                      ]
+                    }, 
+                    'then': true, 
+                    'else': false
+                  }
+                }
+              }
+            }
+          }
+        ];
+        let cursor =  db.pollanswers.aggregate(agg)
+        let data = await cursor.exec();
+        res.status(200).json({ code:200,message: 'Answers fetched successfully!',answers_data:data});
+     }catch(err){
+        res.status(400).json({ message: 'Something went wrong!'});
+        console.log(err);
+    }
+    })
 
 const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => {

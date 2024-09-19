@@ -6,7 +6,8 @@ export const questions = (mongoose) =>{
           options:Array,
           answer:Array,
           teacher_id:Number,
-          allowed_time:Number
+          allowed_time:Number,
+          end_time:Number
         },
         { timestamps: true }
       );
