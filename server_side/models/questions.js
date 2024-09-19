@@ -4,7 +4,7 @@ export const questions = (mongoose) =>{
         {
           question:String,
           options:Array,
-          answer:String,
+          answer:Array,
           teacher_id:Number,
           allowed_time:Number
         },

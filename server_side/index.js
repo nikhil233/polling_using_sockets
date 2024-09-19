@@ -7,8 +7,10 @@ import http from 'http';
 import { Server } from 'socket.io';
 import db from './db.js';
 import runPollSockets from './runPollSockets.js';
+import cors from 'cors';
 
 const app = express();
+app.use(cors())
 app.use(express.json());
 const server = http.createServer(app);
 
