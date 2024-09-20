@@ -113,6 +113,7 @@ footer{
     height: inherit;
     border-radius: 3px;
     z-index: 1;
+    position: relative;
     /* background-color: #6766D5; */
 }
 .progress:after {
@@ -121,5 +122,6 @@ footer{
     background: #6766D5;
     top:0; bottom:0;
     left:0; 
+    width: 100%;
    
 }
