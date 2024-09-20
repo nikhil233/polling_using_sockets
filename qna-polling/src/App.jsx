@@ -42,49 +42,56 @@ function App() {
     <>
       <Container >
           {userType === 0 ? <>
+            <Stack gap={3}>
+              <div style={{textAlign:"center"}}>
+                <h1>Welcome to the Live Polling System</h1>
+                <p>Please select the role that best describes you to begin using the live polling system</p>
+                </div>
+               
             <Row>
-              <Col sm={12} >
-                {/* <Stack gap={2}>
-                  <div>
-                    Add your Name :
-                    <input type="text" name="name" onChange={(e) => setStudentName(e.target.value)} />
-                  </div>
-                  <div>
-                    <Button variant="primary" onClick={() => submitStudent()}>I am a Student</Button>
-                  </div>
-                </Stack> */}
-              </Col>
-              <Col sm={12}>
-                {/* <div>Are you a Teacher?
-                  <Button variant="link" onClick={() => {
-                    sessionStorage.setItem('isTeacher', 1)
-                    setTeacher(1)
-                    }}>Yes</Button>
-                </div> */}
-              </Col>
-
               <Col>
                 <Form.Check
                   inline
-                  label="Are you a Student"
+                  className='raidoBoxwarpper'
+                  label={
+                    <>
+                    <div className='raidoBox'>
+                     <h5>Are you a Student</h5>
+                      <p>
+                      Lorem Ipsum is simply dummy text of the printing and typesetting industry
+                      </p>
+                    </div>
+                    </>
+                  }
                   name="isStudent"
                   type={"radio"}
-                  id={`inline-1`}
+                  id={`init-radio-1`}
                   onChange={() => setUserTypeFunc(1)}
                 />
               </Col>
               <Col>
               <Form.Check
                   inline
-                  label="Are you a Teacher"
+                  className='raidoBoxwarpper'
+                  label={
+                    <>
+                    <div className='raidoBox'>
+                     <h5>Are you a Teacher</h5>
+                      <p>
+                        Submit answers and view live poll results in real-time.
+                      </p>
+                    </div>
+                    </>
+                  }
                   name="isStudent"
                   type={"radio"}
-                  id={`inline-2`}
+                  id={`init-radio`}
                   onChange={() => setUserTypeFunc(2)}
                 />
 
               </Col>
             </Row>
+            </Stack>
           </> : 
           <Submitted userType={userType} userID={userID} submitStudent={submitStudent} setStudentName={setStudentName} studentName={studentName}/>
           

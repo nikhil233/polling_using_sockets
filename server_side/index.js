@@ -183,15 +183,18 @@ app.get("/getallquestions", async (req, res) => {
 
     answerStats.forEach(element => {
       if(!questionsData[element.question]){
-        questionsData[element.question] = {}
+        questionsData[element.question] = {
+          total:0
+        }
       }
       questionsData[element.question] =  {
         ...questionsData[element.question],
-        [element.option]: element.submitted
+        [element.option]: element.submitted,
+        total: questionsData[element.question].total + element.submitted
       }
     });
   
-    res.status(200).json({ code:200,message: 'Questions fetched successfully!',answers_stats:answerStats, questions: questions});
+    res.status(200).json({ code:200,message: 'Questions fetched successfully!',answers_stats:questionsData, questions: questions});
   }catch(err){
     res.status(400).json({ message: 'Something went wrong!'});
     console.log(err);

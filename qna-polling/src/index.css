@@ -17,3 +17,109 @@ body{
     justify-content: center;
     align-items: center;
 }
+.raidoBoxwarpper{
+    width: 387px;
+}
+.raidoBoxwarpper>.form-check-label{
+    border: 1px solid #D9D9D9;
+    padding: 15px  17px  15px  25px;
+    border-radius: 10px;
+    width: 100%;
+    height: 130px;
+}
+.raidoBoxwarpper > input{
+    display: none;
+}
+.raidoBoxwarpper .form-check-input:checked+ .form-check-label {
+    border: 1px solid #7765DA;
+}
+
+.form-control{
+    background-color: #F2F2F2;
+}
+.labelquestion{
+    padding: 0;
+}
+.time-select{
+    background-color: #F1F1F1;
+    width: 170px;
+}
+
+footer{
+    /* position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: #7765DA;
+    color: #fff;
+    text-align: center;
+    padding: 10px 0; */
+}
+
+.btn{
+    background: linear-gradient(99.18deg, #8F64E1 -46.89%, #1D68BD 223.45%);
+    border-radius: 34px;
+    color: #fff;
+    width: 233px;
+}
+
+.question-stack{
+    width: 727px;
+    border-radius: 9px;
+    /* border: 1px solid #AF8FF1; */
+}
+.question-text{
+    border-radius: 10px 10px 0 0 ;
+    background: linear-gradient(90deg, #343434 0%, #6E6E6E 100%);
+    color: #fff;
+    font-size: 17px;
+    font-weight: 600;
+    padding: 16px;
+}
+.options-stack{
+    border: 1px solid #AF8FF1;
+    border-radius: 0 0 10px 10px;
+    padding: 25px 16px 18px;
+}
+.answer-option{
+    width: 100%;
+    border: 1px solid #8D8D8D30;
+    background-color: #F6F6F6;
+    color: #2E2E2E;
+    border-radius: 6px;
+    padding: 11px 26px  ;
+    z-index: 3;
+}
+.options-stack .form-check-label{
+    width: 100%;
+}
+.answer-radio{
+    padding: 0;
+    position: relative;
+
+}
+.answer-radio input{
+    display: none;
+}
+
+.answer-radio .form-check-input:checked+.form-check-label  .answer-option , .answer-option.is-selected{
+    background-color: #fff;
+    border: 1px solid #8F64E1
+}
+.text-red{
+    color: #CB1206;
+}
+.progress{
+    height: inherit;
+    border-radius: 3px;
+    z-index: 1;
+    /* background-color: #6766D5; */
+}
+.progress:after {
+    content:'\A';
+    position:absolute;
+    background: #6766D5;
+    top:0; bottom:0;
+    left:0; 
+   
+}

@@ -117,7 +117,7 @@ const Submitted = ({userType , userID ,submitStudent , setStudentName ,studentNa
     }
     return (
         <Container>
-            <Row>
+            {/* <Row>
                <div>
                     Question: {questionData?.question}
                </div>
@@ -132,7 +132,31 @@ const Submitted = ({userType , userID ,submitStudent , setStudentName ,studentNa
                          })
                     }
                </Stack>
-            </Row>
+            </Row> */}
+            <Stack  className="question-stack">
+            <div className="question-text">
+                {questionData?.question} 
+               
+            </div>
+            <Stack gap={3} className="options-stack">
+                { questionData?.options?.map((option,index) => {
+                    return(<div className='answer-radio gap-3 '>
+                        <div className='progress' style={{width:`${optionsPerc[index]? `${((optionsPerc[index]/total) * 100).toFixed(2)} %` : "0 %"}`}}></div>
+
+                        <div className={`answer-option d-flex justify-content-between ${index == youAnswer ? "is-selected" : ""}`}>
+                        
+                        <span className="">{option}</span>
+                        <span className=" ">{optionsPerc[index]? `${((optionsPerc[index]/total) * 100).toFixed(2)} %` : "0 %"}</span>
+                        </div>
+                    
+                    </div>)
+                 })}
+            </Stack>
+          
+            </Stack>
+            {userType ==  1 ? <div className='text-center' style={{margin:"10px 0"}}>
+                <p><b>Wait for the teacher to ask a new question..</b></p>
+            </div> : <></>}
         </Container>
     )
 }
