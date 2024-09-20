@@ -5,7 +5,7 @@ import { io } from "socket.io-client";
 
 
 
-const Teacher = ({setShowSubmitted}) => {
+const Teacher = ({}) => {
 
     const [teacherName,setTeacherName] = useState('')
     const [question,setQuestion] = useState('')
@@ -22,7 +22,6 @@ const Teacher = ({setShowSubmitted}) => {
             allowed_time:allowedTime * 60
         }
         const url = "http://localhost:8000/addquestion"
-        // console.log(data)
         try{
             const {data} = await fetch(url, {
                 method: 'POST',
@@ -31,7 +30,6 @@ const Teacher = ({setShowSubmitted}) => {
                 },
                 body: JSON.stringify(jsonData),
               });
-              setShowSubmitted(true)
 
         }catch(err){
             console.log("err",err)
@@ -52,7 +50,7 @@ const Teacher = ({setShowSubmitted}) => {
 
     return (
         <Form>
-            <Form.Group as={Row} className="mb-3" controlId="teacherName" onSubmit={handleSubmit} >
+            {/* <Form.Group as={Row} className="mb-3" controlId="teacherName"  >
                 <Form.Label column sm="3">Teacher Name</Form.Label>
                 <Col sm="6">
 
@@ -60,11 +58,11 @@ const Teacher = ({setShowSubmitted}) => {
                 required
                  type="text" placeholder="Enter Name" value={teacherName} onChange={(e) => setTeacherName(e.target.value)} />
                 </Col>
-            </Form.Group>
+            </Form.Group> */}
             <Form.Group as={Row} className="mb-3" controlId="question">
                 <Form.Label column sm="3">Question</Form.Label>
                 <Col sm="6">
-                <Form.Control required type="text" placeholder="Add question" value={question}  onChange={(e) => setQuestion(e.target.value)}/> 
+                <Form.Control required as="textarea" type="text" placeholder="Add question" value={question}  onChange={(e) => setQuestion(e.target.value)}/> 
                 </Col>
             </Form.Group>
             <Form.Group as={Row} style={{marginLeft: '50px'}} className="mb-3" controlId="options">

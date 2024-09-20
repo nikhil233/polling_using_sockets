@@ -40,12 +40,9 @@ db.mongoose
 
 app.post("/addquestion", (req, res) => {
     try{
-        // let question = req.body.question;
-        // let options = req.body.options;
-        // let answer = req.body.answer;
-        // let teacher_id = req.body.teacher_id;
         const { question, options, answer, teacher_id,allowed_time } = req.body;
-        const end_time  = Math.ceil(Date.now()/1000) + ((allowed_time ?? 60));
+        const created_at  =  Math.ceil(Date.now()/1000);
+        const end_time  = created_at + ((allowed_time ?? 60));
         let newQuestion = new db.questions({
             question,
             options,
@@ -53,9 +50,9 @@ app.post("/addquestion", (req, res) => {
             teacher_id,
             allowed_time,
             end_time
-        });
+          });
         newQuestion.save();
-        io.emit('newQuestion', {...req.body,question_id:newQuestion._id});
+        io.of('/getanswers').emit('newQuestion', {...req.body,_id:newQuestion._id , end_time});
         res.status(200).json({ code:200,message: 'Question added successfully!'});
     }catch(err){
         res.status(400).json({ message: 'Question added failed!'});
@@ -86,7 +83,7 @@ app.get("/getactivequestion", async (req, res) => {
           {
             '$match': {
               'end_time': {
-                '$lt': nowTime
+                '$gt': nowTime
               }
             }
           }, {
@@ -151,8 +148,56 @@ app.get('/getanswers', async (req, res) => {
         res.status(400).json({ message: 'Something went wrong!'});
         console.log(err);
     }
-    })
+})
 
+app.get("/getallquestions", async (req, res) => {
+  try{
+    let cursor = db.questions.find()
+    let agg = [
+      {
+        '$group': {
+          '_id': {
+            'question': "$question_id",
+            'option': "$answer"
+          },
+          'submitted': {
+            '$sum': 1
+          }
+        }
+      },
+      {
+        '$project': {
+          "submitted": 1,
+          "question": "$_id.question",
+          "option": "$_id.option",
+          "_id":0
+        }
+      }
+    ]
+    
+    let questions = await cursor.exec();
+    let cursor2 = db.pollanswers.aggregate(agg)
+    let answerStats = await cursor2.exec();
+
+    let questionsData = {};
+
+    answerStats.forEach(element => {
+      if(!questionsData[element.question]){
+        questionsData[element.question] = {}
+      }
+      questionsData[element.question] =  {
+        ...questionsData[element.question],
+        [element.option]: element.submitted
+      }
+    });
+  
+    res.status(200).json({ code:200,message: 'Questions fetched successfully!',answers_stats:answerStats, questions: questions});
+  }catch(err){
+    res.status(400).json({ message: 'Something went wrong!'});
+    console.log(err);
+  }
+       
+})
 const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);

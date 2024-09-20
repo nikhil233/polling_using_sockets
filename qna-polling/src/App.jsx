@@ -7,7 +7,7 @@ import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Stack from 'react-bootstrap/Stack';
-import { Button } from 'react-bootstrap'
+import { Button,Form } from 'react-bootstrap'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Submitted from './components/submitted'
 import Student from './components/Student'
@@ -16,10 +16,9 @@ import Student from './components/Student'
 
 function App() {
 
-  const [isTeacher, setTeacher] = useState(sessionStorage.getItem('isTeacher') || 0)
-  const [isStudent, setStudent] = useState(sessionStorage.getItem('isStudent') || 0)
+  const [userType, setUserType] = useState(sessionStorage.getItem('user_type') || 0)
   const [studentName, setStudentName] = useState('') ;
-  const [studentID, setStudentID] = useState(sessionStorage.getItem('student_id') || null)
+  const [userID, setUserID] = useState(sessionStorage.getItem('user_id') || null)
   const [showSubmitted , setShowSubmitted] = useState(false)
 
   const submitStudent = (questionsData) => {
@@ -29,26 +28,23 @@ function App() {
     } 
     let student_id = `${studentName.replace(' ','_')}_${Date.now()}`
     sessionStorage.setItem('studentName', studentName)
-    sessionStorage.setItem('isStudent', 1)
-    sessionStorage.setItem('isTeacher', 0)
-    setStudentID(student_id)
-    sessionStorage.setItem('student_id', student_id)
-    setStudent(1)
+    setUserID(student_id)
+    sessionStorage.setItem('user_id', student_id)
   }
 
-  const teacherQuestionSubmitted = () => {
-    
+  const setUserTypeFunc = (val) => {
+      setUserType(val)
+      sessionStorage.setItem('user_type', val)
+      setShowSubmitted(true)
   }
-  if(showSubmitted){
-    return (<Submitted />)
-  }
+
   return (
     <>
-      <Container style={{ marginTop: '10px',textAlign: 'center' }}>
-          {!isTeacher && !isStudent ? <>
+      <Container >
+          {userType === 0 ? <>
             <Row>
               <Col sm={12} >
-                <Stack gap={2}>
+                {/* <Stack gap={2}>
                   <div>
                     Add your Name :
                     <input type="text" name="name" onChange={(e) => setStudentName(e.target.value)} />
@@ -56,23 +52,41 @@ function App() {
                   <div>
                     <Button variant="primary" onClick={() => submitStudent()}>I am a Student</Button>
                   </div>
-                </Stack>
+                </Stack> */}
               </Col>
               <Col sm={12}>
-                <div>Are you a Teacher?
+                {/* <div>Are you a Teacher?
                   <Button variant="link" onClick={() => {
                     sessionStorage.setItem('isTeacher', 1)
                     setTeacher(1)
                     }}>Yes</Button>
-                </div>
+                </div> */}
+              </Col>
+
+              <Col>
+                <Form.Check
+                  inline
+                  label="Are you a Student"
+                  name="isStudent"
+                  type={"radio"}
+                  id={`inline-1`}
+                  onChange={() => setUserTypeFunc(1)}
+                />
+              </Col>
+              <Col>
+              <Form.Check
+                  inline
+                  label="Are you a Teacher"
+                  name="isStudent"
+                  type={"radio"}
+                  id={`inline-2`}
+                  onChange={() => setUserTypeFunc(2)}
+                />
+
               </Col>
             </Row>
           </> : 
-          <>
-          {
-            Number(isTeacher) ? <Teacher setShowSubmitted={setShowSubmitted}/> : <Student setShowSubmitted={setShowSubmitted}/>
-          }
-          </>
+          <Submitted userType={userType} userID={userID} submitStudent={submitStudent} setStudentName={setStudentName} studentName={studentName}/>
           
           }
           

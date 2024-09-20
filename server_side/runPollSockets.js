@@ -15,6 +15,11 @@ const runPollSockets = (io) => {
 
     });
 
+    io.of('/getanswers').on('connection', (socket) => {
+        const socketId = socket.id;
+        console.log("student socket", socketId);
+    });
+
 }
 
 export default runPollSockets
