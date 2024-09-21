@@ -9,7 +9,7 @@ import Col from 'react-bootstrap/Col';
 import Stack from 'react-bootstrap/Stack';
 import { Button,Form } from 'react-bootstrap'
 import 'bootstrap/dist/css/bootstrap.min.css';
-import Submitted from './components/submitted'
+import Submitted from './components/Submitted_new'
 import Student from './components/Student'
 
 console.log("env",import.meta.env)
