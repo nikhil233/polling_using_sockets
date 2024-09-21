@@ -6,7 +6,7 @@ const Student = ({setAlreadySubmitted ,setYouAnswer, questionData}) => {
     const [activeQuestion , setActiveQuestion] = useState(questionData)
     const [answer,setAnswer] = useState()
     const [remainingTime,setRemainingTime] = useState(60)
-
+    const [isLoading , setIsLoading] = useState(false)
     const SubmitAnswer = async () => {
         const jsonData = {
             question_id:activeQuestion._id,
@@ -16,6 +16,7 @@ const Student = ({setAlreadySubmitted ,setYouAnswer, questionData}) => {
         setYouAnswer(answer)
         const url = import.meta.env.VITE_ENDPOINT+"/submitanswer"
         try{
+            setIsLoading(true)
             const {data} = await fetch(url, {
                 method: 'POST',
                 headers: {
@@ -27,6 +28,8 @@ const Student = ({setAlreadySubmitted ,setYouAnswer, questionData}) => {
             setAlreadySubmitted(true)
         }catch(err){
             console.log("err",err)
+        }finally{
+            setIsLoading(false)
         }
     }
     useEffect(() => {
@@ -120,7 +123,9 @@ const Student = ({setAlreadySubmitted ,setYouAnswer, questionData}) => {
            
         </Stack>
         <div className="d-flex justify-content-end">
-                <Button className="btn-custom" onClick={() => SubmitAnswer()}>Submit</Button>
+                <Button className="btn-custom"  disabled={isLoading} onClick={() => SubmitAnswer()}>
+                    {isLoading ? <Spinner animation="border" role="status" /> : ""}
+                    Submit</Button>
             </div>
         </Stack>
     )

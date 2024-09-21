@@ -76,7 +76,7 @@ const Submitted = ({userType , userID ,submitStudent , setStudentName ,studentNa
             data?.answers_data.forEach((item) => {
                 optionsCounts[item?._id] = item?.submitted
                 total += item?.submitted
-                if(item?.is_your_answer){
+                if(item?.is_your_submisstions){
                     setYouAnswer(item?._id)
                 }
             })
@@ -209,7 +209,7 @@ const Submitted = ({userType , userID ,submitStudent , setStudentName ,studentNa
                 { questionData?.options?.map((option,index) => {
                     return(
                     
-                    <div className="answer-radio gap-3 position-relative">
+                    <div className={`answer-radio gap-3 position-relative ${youAnswer == index ? "is-selected" : ""}`}>
                         <span
                             className="progress"
                             style={{
@@ -218,13 +218,13 @@ const Submitted = ({userType , userID ,submitStudent , setStudentName ,studentNa
                             }}
                         ></span>
 
-                        <div className="answer-option d-flex justify-content-between position-relative">
-                            <span className="text-foreground">{option}</span>
+                        <div className={`answer-option d-flex justify-content-between position-relative `} >
+                            <span className="text-foreground">{option} </span>
                             <span className="text-foreground">{optionsPerc[index] ? `${((optionsPerc[index] / total) * 100).toFixed(2)} %` : "0 %"}</span>
                         </div>
 
                         <div
-                            className="answer-option d-flex justify-content-between position-absolute top-0 left-0 w-100"
+                            className={`answer-option d-flex justify-content-between position-absolute top-0 left-0 w-100 `}
                             style={{
                             color: '#fff', 
                             clipPath: `inset(0 ${100 - (optionsPerc[index] ? ((optionsPerc[index] / total) * 100) : 0)}% 0 0)`,

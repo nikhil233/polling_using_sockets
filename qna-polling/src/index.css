@@ -109,7 +109,7 @@ footer{
     display: none;
 }
 
-.answer-radio .form-check-input:checked+.form-check-label  .answer-option , .answer-option.is-selected{
+.answer-radio .form-check-input:checked+.form-check-label  .answer-option , .answer-radio.is-selected{
     background-color: #fff;
     border: 1px solid #8F64E1
 }
