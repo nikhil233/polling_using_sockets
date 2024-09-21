@@ -110,7 +110,7 @@ const Submitted = ({userType , userID ,submitStudent , setStudentName ,studentNa
     
     useEffect(() => {
         if(isloaded && !socket){
-            setSocket(io("http://localhost:8000/getanswers",{
+            setSocket(io(import.meta.env.VITE_ENDPOINT+"/getanswers",{
                 transports: ["websocket"],
                 retries:3,
                 reconnectionAttempts: 3, // Set the maximum number of reconnection attempts
