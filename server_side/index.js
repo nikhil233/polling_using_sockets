@@ -14,6 +14,8 @@ app.use(cors())
 app.use(express.json());
 const server = http.createServer(app);
 
+var teacherlive =[];
+var studentlive ={};
 var io;
 db.mongoose
   .connect(db.url, {
@@ -29,7 +31,7 @@ db.mongoose
           credentials: true,
         },
       });
-      runPollSockets(io);
+      runPollSockets(io , teacherlive  ,studentlive );
 
   })
   .catch(err => {
@@ -200,6 +202,38 @@ app.get("/getallquestions", async (req, res) => {
     console.log(err);
   }
        
+})
+
+app.get("/getactivestudents", (req, res) => {
+  try{
+    res.status(200).json({ code:200,message: 'Students fetched successfully!',students:studentlive});
+  }catch(err){
+    res.status(400).json({ message: 'Something went wrong!'});
+
+  }
+});
+
+app.post("/removeparticipant", (req, res) => {
+  try{
+    let socket_id = req.body?.socket_id;
+    io.of('/getanswers').to(socket_id).emit("remove_participant",{});
+    io.of('/getanswers').to(socket_id).disconnectSockets();
+    res.status(200).json({ code:200,message: 'Participant removed successfully!'});
+  }
+  catch(err){
+    res.status(400).json({ message: 'Something went wrong!'});
+    console.log(err);
+  }
+})
+
+app.get("/getteachercount",(req, res) => {
+  try{
+    res.status(200).json({ code:200,message: 'Teacher count fetched successfully!',teacher_count:teacherlive.length});
+  }
+  catch(err){
+    res.status(400).json({ message: 'Something went wrong!'});
+    console.log(err);
+  }
 })
 const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => {

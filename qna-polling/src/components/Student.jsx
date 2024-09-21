@@ -14,7 +14,7 @@ const Student = ({setAlreadySubmitted ,setYouAnswer, questionData}) => {
             user_id:sessionStorage.getItem("user_id")
         }
         setYouAnswer(answer)
-        const url = "http://localhost:8000/submitanswer"
+        const url = import.meta.env.VITE_ENDPOINT+"/submitanswer"
         try{
             const {data} = await fetch(url, {
                 method: 'POST',
@@ -120,7 +120,7 @@ const Student = ({setAlreadySubmitted ,setYouAnswer, questionData}) => {
            
         </Stack>
         <div className="d-flex justify-content-end">
-                <Button onClick={() => SubmitAnswer()}>Submit</Button>
+                <Button className="btn-custom" onClick={() => SubmitAnswer()}>Submit</Button>
             </div>
         </Stack>
     )

@@ -24,7 +24,7 @@ const Teacher = ({}) => {
             answer:answer,
             allowed_time:allowedTime * 60
         }
-        const url = "http://localhost:8000/addquestion"
+        const url = import.meta.env.VITE_ENDPOINT+"/addquestion"
         try{
             const {data} = await fetch(url, {
                 method: 'POST',
@@ -53,7 +53,7 @@ const Teacher = ({}) => {
 
     const getAllQuestions = async()=>{
         try{
-            const url = "http://localhost:8000/getallquestions"
+            const url = import.meta.env.VITE_ENDPOINT+"/getallquestions"
             let resp  =await fetch(url)
             const data = await resp.json();
             // let newQuestions = data.questions.map(e => {
@@ -78,10 +78,11 @@ const Teacher = ({}) => {
 
     if(showAllQuestions){
         return (
-            <>
+            <Stack gap={3} style={{margin:"10px 0",width:"100%"}}>
+            {allQuestions.length === 0 && <div>No Questions Found</div>}
             {allQuestions.map((item,index) => (
                 <>
-                <Stack key={index} style={{margin:"10px 0",width:"100%"}}>
+                {/* <Stack key={index} style={{margin:"10px 0",width:"100%"}}>
                     <div>
                         <div>{item.question}</div>
                     </div>
@@ -93,31 +94,77 @@ const Teacher = ({}) => {
                             </div>
                     ))}
                     </div>
+                </Stack> */}
+                <div>
+                    <div><b>Question {index+1}</b></div>
+                </div>
+            <Stack  className="question-stack">
+                <div className="question-text">
+                    {item?.question} 
+                
+                </div>
+                <Stack gap={3} className="options-stack">
+                    { item?.options?.map((option,index) => {
+                        return(
+                        
+                        <div className="answer-radio gap-3 position-relative">
+                            <span
+                                className="progress"
+                                style={{
+                                width: `${answerStats[item._id] && answerStats[item._id][index]  && answerStats[item._id].total ? (((answerStats[item._id][index] ?? 0)/answerStats[item._id].total)*100).toFixed(2) : 0}%`,
+                                backgroundColor: '#6766D5',
+                                }}
+                            ></span>
+
+                            <div className="answer-option d-flex justify-content-between position-relative">
+                                <span className="text-foreground">{option}</span>
+                                <span className="text-foreground">{answerStats[item._id] && answerStats[item._id][index]  && answerStats[item._id].total ? (((answerStats[item._id][index] ?? 0)/answerStats[item._id].total)*100).toFixed(2) : 0}%</span>
+                            </div>
+
+                            <div
+                                className="answer-option d-flex justify-content-between position-absolute top-0 left-0 w-100"
+                                style={{
+                                color: '#fff', 
+                                clipPath: `inset(0 ${100 - (answerStats[item._id] && answerStats[item._id][index]  && answerStats[item._id].total ? (((answerStats[item._id][index] ?? 0)/answerStats[item._id].total)*100).toFixed(2) : 0)}% 0 0)`,
+                                pointerEvents: 'none', 
+                                }}
+                            >
+                                <span>{option}</span>
+                                <span>{ `${answerStats[item._id] && answerStats[item._id][index]  && answerStats[item._id].total ? (((answerStats[item._id][index] ?? 0)/answerStats[item._id].total)*100).toFixed(2) : 0}%` }</span>
+                            </div>
+                            </div>
+
+                        
+                    
+                    )
+                    })}
                 </Stack>
-                </>
+             </Stack>
+             </>
             ))}
-            </>
+
+            </Stack>
         )
     }
     
     return (
-       
-        <Form>
-            {/* <Form.Group as={Row} className="mb-3" controlId="teacherName"  >
-                <Form.Label column sm="3">Teacher Name</Form.Label>
-                <Col sm="6">
-
-                <Form.Control
-                required
-                 type="text" placeholder="Enter Name" value={teacherName} onChange={(e) => setTeacherName(e.target.value)} />
-                </Col>
-            </Form.Group> */}
-             <div style={{width:"60%"}}>
-            <div>
+       <>
+        <div className='d-flex justify-content-between'> 
+                <div>
                 <h1>Let’s <b>Get Started</b></h1>
                 <p>you’ll have the ability to create and manage polls, ask questions, and monitor your students' responses in real-time.</p>
+                </div>
+                <div>
+                    <Button  size="sm" style={{backgroundColor:"#6766D5"}} className='btn-custom' variant="primary" onClick={() => setShowAllQuestions(true)}>
+
+                        Show Questions</Button>
+
+                    </div>
+                
             </div>
-            {/* <Button variant="primary" onClick={() => setShowAllQuestions(true)}>Show Questions</Button> */}
+        <Form>
+             <div style={{width:"60%"}}>
+           
             <Form.Group className="mb-3" controlId="question">
                 <Stack gap={3}>
                 <div className='d-flex justify-content-between'>
@@ -128,7 +175,7 @@ const Teacher = ({}) => {
                     <option selected={allowedTime == 3} value="3">Three minutes</option>
                 </Form.Select>
                 </div>
-                <Form.Control required as="textarea" type="text" placeholder="Add question" value={question}  onChange={(e) => setQuestion(e.target.value)}/> 
+                <Form.Control required as="textarea" rows="7" type="text" placeholder="Add question" value={question}  onChange={(e) => setQuestion(e.target.value)}/> 
             </Stack>
             </Form.Group>
             <Form.Group   className="mb-3" controlId="options">
@@ -203,10 +250,12 @@ const Teacher = ({}) => {
             </Form.Group> */}
             </div>
             <div className='d-flex justify-content-end footer mt-3'>
-            <Button variant="primary" className='btn' type="submit" onClick={handleSubmit}>Ask Question</Button>
+            <Button variant="primary" className='btn-custom' type="submit" onClick={handleSubmit}>Ask Question</Button>
             </div>
            
         </Form>
+        </>
+
     )
 }
 
