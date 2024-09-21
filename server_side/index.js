@@ -14,7 +14,7 @@ app.use(cors())
 app.use(express.json());
 const server = http.createServer(app);
 
-var teacherlive =[];
+var teacherlive ={};
 var studentlive ={};
 var io;
 db.mongoose
@@ -228,7 +228,8 @@ app.post("/removeparticipant", (req, res) => {
 
 app.get("/getteachercount",(req, res) => {
   try{
-    res.status(200).json({ code:200,message: 'Teacher count fetched successfully!',teacher_count:teacherlive.length});
+    console.log("teacherlive",teacherlive)
+    res.status(200).json({ code:200,message: 'Teacher count fetched successfully!',teacher_count:Object.keys(teacherlive).length});
   }
   catch(err){
     res.status(400).json({ message: 'Something went wrong!'});
